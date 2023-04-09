@@ -1,0 +1,30 @@
+version: '3.7'
+services:
+  web:
+    image: 'ubuntu:20.04'
+    build:
+      dockerfile: './docker-nginx/web.Dockerfile'
+    stdin_open: true
+    tty: true
+    ports:
+      - '21080:80'
+      - '21022:22'
+    volumes:
+      - './docker-nginx/nginx/sites-available:/etc/nginx/sites-available'
+      - './docker-nginx/php/php.ini:/etc/php/5.6/fpm/php.ini'
+      - './docker-nginx/php/php.ini:/etc/php/5.6/fpm/phphp-fpm.conf'
+      - './xe.test:/home/xe.test'
+  db:
+    image: mariadb/server:10.5
+    ports:
+      - '22306:3306'
+      - '22022:22'
+    environment:
+      - 'MARIADB_ROOT_PASSWORD=docker123'
+      - 'MARIADB_DATABASE=xe'
+      - 'TZ=Asia/Seoul'
+    command:
+      - '--character-set-server=utf8'
+      - '--collation-server=utf8_general_ci'
+    volumes:
+      - './docker-mysql/mysql:/var/lib/mysql'
